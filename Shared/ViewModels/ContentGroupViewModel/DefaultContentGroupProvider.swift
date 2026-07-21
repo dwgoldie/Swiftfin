@@ -43,6 +43,14 @@ struct DefaultContentGroupProvider: ContentGroupProvider {
     @ContentGroupBuilder
     private func _makeGroups(userViews: [BaseItemDto]) -> [any ContentGroup] {
 
+        // tvOS already leads with a cinematic hero; give iOS/iPadOS a
+        // Netflix-style spotlight of the latest content across libraries.
+        #if !os(tvOS)
+        if Defaults[.Customization.Library.showFeaturedBanner] {
+            HomeFeaturedContentGroup()
+        }
+        #endif
+
         #if os(tvOS)
         let cinematicSelectionContentGroup = CinematicSelectionContentGroup(
             resumeLibrary: ResumeItemsLibrary(mediaTypes: [.video]),
