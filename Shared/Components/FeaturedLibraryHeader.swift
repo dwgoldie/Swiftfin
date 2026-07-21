@@ -31,6 +31,14 @@ struct FeaturedLibraryHeader: View {
     private var isFocused: Bool
 
     private static let bannerHeight: CGFloat = 560
+    #else
+    /// A definite height for the iOS hero. The collection-view header
+    /// measures its content up-front, so it must not depend on an
+    /// async image's (initially zero) intrinsic size.
+    private static var bannerHeight: CGFloat {
+        let width = UIScreen.main.bounds.width - EdgeInsets.edgePadding * 2
+        return width * 9 / 16
+    }
     #endif
 
     private static let rotationInterval: TimeInterval = 7
@@ -163,7 +171,8 @@ struct FeaturedLibraryHeader: View {
                 placeholderCard
             }
         }
-        .aspectRatio(16 / 9, contentMode: .fit)
+        .frame(height: Self.bannerHeight)
+        .frame(maxWidth: .infinity)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay(alignment: .bottomTrailing) {
             indexIndicator

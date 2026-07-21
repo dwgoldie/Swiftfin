@@ -23,11 +23,14 @@ final class FeaturedItemsViewModel: ViewModel {
     private let parent: BaseItemDto?
 
     /// Whether the parent library supports a featured banner.
+    ///
+    /// Keyed off `collectionType` rather than `type`: Jellyfin returns
+    /// movie/show libraries from `/UserViews` as `.collectionFolder`
+    /// (not `.userView`), so gating on `type` silently disables the banner.
     var isEligible: Bool {
-        guard let parent, parent.type == .userView else { return false }
+        guard let parent else { return false }
 
-        return parent.collectionType == nil ||
-            parent.collectionType == .movies ||
+        return parent.collectionType == .movies ||
             parent.collectionType == .tvshows
     }
 
