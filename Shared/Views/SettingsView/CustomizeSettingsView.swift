@@ -32,6 +32,8 @@ struct CustomizeSettingsView: View {
 
     @Default(.Customization.Library.showFavorites)
     private var showFavorites
+    @Default(.Customization.Library.showFeaturedBanner)
+    private var showFeaturedBanner
     @Default(.Customization.Library.randomImage)
     private var libraryRandomImage
 
@@ -205,6 +207,8 @@ struct CustomizeSettingsView: View {
     private var mediaSettings: some View {
         Section(L10n.media) {
             Toggle(L10n.favorites, isOn: $showFavorites)
+
+            Toggle(L10n.featuredBanner, isOn: $showFeaturedBanner)
 
             Toggle(L10n.randomImage, isOn: $libraryRandomImage)
         }

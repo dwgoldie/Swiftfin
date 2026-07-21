@@ -21,6 +21,8 @@ extension CustomizeViewsSettings {
 
         @Default(.Customization.Library.showFavorites)
         private var showFavorites
+        @Default(.Customization.Library.showFeaturedBanner)
+        private var showFeaturedBanner
         @Default(.Customization.Library.enabledDrawerFilters)
         private var libraryEnabledDrawerFilters
         @Default(.Customization.Library.randomImage)
@@ -43,6 +45,8 @@ extension CustomizeViewsSettings {
 
                 Section {
                     Toggle(L10n.favorites, isOn: $showFavorites)
+
+                    Toggle(L10n.featuredBanner, isOn: $showFeaturedBanner)
 
                     Toggle(L10n.randomImage, isOn: $libraryRandomImage)
                 }

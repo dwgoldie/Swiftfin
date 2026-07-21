@@ -19,6 +19,12 @@ struct SearchView: View {
     @FocusState
     private var isSearchFocused: Bool
 
+    @Namespace
+    private var namespace
+
+    @Router
+    private var router
+
     @State
     private var searchQuery = ""
 
@@ -32,17 +38,37 @@ struct SearchView: View {
 
     @ViewBuilder
     private var suggestionsView: some View {
+        #if os(tvOS)
+        // An interactive "Discover" state: browsable posters from
+        // across the user's libraries, with a cinematic background
+        // for the focused poster.
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text(L10n.discover)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .edgePadding(.horizontal)
+
+                PosterHStack(
+                    elements: viewModel.suggestions,
+                    displayType: .portrait,
+                    size: .medium
+                ) { item, _ in
+                    router.route(to: .item(item: item), in: namespace)
+                }
+            }
+            .edgePadding(.vertical)
+        }
+        .scrollIndicators(.hidden)
+        #else
         VStack(spacing: 20) {
             ForEach(viewModel.suggestions) { item in
                 Button(item.displayTitle) {
                     searchQuery = item.displayTitle
                 }
-                #if os(tvOS)
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-                #endif
             }
         }
+        #endif
     }
 
     @ViewBuilder
@@ -76,6 +102,11 @@ struct SearchView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        #if os(tvOS)
+        .background {
+            FocusedPosterCinematicBackgroundView()
+        }
+        #endif
         .animation(.linear(duration: 0.2), value: viewModel.state)
         .ignoresSafeArea(.keyboard)
         .navigationTitle(L10n.search)

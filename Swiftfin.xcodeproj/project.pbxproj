@@ -1298,9 +1298,9 @@
 		};
 		E12CDBBD2FFB592A00828742 /* XCRemoteSwiftPackageReference "CollectionVGrid" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/LePips/CollectionVGrid";
+			repositoryURL = "https://github.com/bizpers11991-code/CollectionVGrid";
 			requirement = {
-				branch = main;
+				branch = "grid-header";
 				kind = branch;
 			};
 		};
