@@ -165,7 +165,6 @@ struct FeaturedLibraryHeader: View {
                     bannerCard(for: selectedItem)
                 }
                 .buttonStyle(.plain)
-                .backport
                 .matchedTransitionSource(id: "item", in: namespace)
             } else {
                 placeholderCard

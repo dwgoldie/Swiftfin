@@ -103,31 +103,31 @@ struct SearchView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         #if os(tvOS)
-        .background {
-            FocusedPosterCinematicBackgroundView()
-        }
-        #endif
-        .animation(.linear(duration: 0.2), value: viewModel.state)
-        .ignoresSafeArea(.keyboard)
-        .navigationTitle(L10n.search)
-        .toolbarTitleDisplayMode(.inline)
-        .searchFocused($isSearchFocused)
-        .onReceive(tabItemSelected) { event in
-            if event.isRepeat, event.isRoot {
-                isSearchFocused = true
+            .background {
+                FocusedPosterCinematicBackgroundView()
             }
-        }
-        .onFirstAppear {
-            viewModel.getSuggestions()
-        }
-        .onChange(of: searchQuery) {
-            viewModel.search(query: searchQuery)
-        }
-        .searchable(
-            text: $searchQuery,
-            prompt: L10n.search
-        )
-        .environmentObject(focusCoordinator)
+        #endif
+            .animation(.linear(duration: 0.2), value: viewModel.state)
+                .ignoresSafeArea(.keyboard)
+                .navigationTitle(L10n.search)
+                .toolbarTitleDisplayMode(.inline)
+                .searchFocused($isSearchFocused)
+                .onReceive(tabItemSelected) { event in
+                    if event.isRepeat, event.isRoot {
+                        isSearchFocused = true
+                    }
+                }
+                .onFirstAppear {
+                    viewModel.getSuggestions()
+                }
+                .onChange(of: searchQuery) {
+                    viewModel.search(query: searchQuery)
+                }
+                .searchable(
+                    text: $searchQuery,
+                    prompt: L10n.search
+                )
+                .environmentObject(focusCoordinator)
         #if os(tvOS)
             .edgePadding(.top)
         #else
