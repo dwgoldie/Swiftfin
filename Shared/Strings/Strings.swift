@@ -576,6 +576,8 @@ internal enum L10n {
   internal static let discImageDescription = L10n.tr("Localizable", "discImageDescription", fallback: "Square disc art representing physical media like CDs, DVDs, or Blu-rays. Commonly used for music albums and movie collections.")
   /// Disclaimer
   internal static let disclaimer = L10n.tr("Localizable", "disclaimer", fallback: "Disclaimer")
+  /// Discover
+  internal static let discover = L10n.tr("Localizable", "discover", fallback: "Discover")
   /// Dismiss
   internal static let dismiss = L10n.tr("Localizable", "dismiss", fallback: "Dismiss")
   /// Display order
@@ -704,6 +706,8 @@ internal enum L10n {
   internal static let favorited = L10n.tr("Localizable", "favorited", fallback: "Favorited")
   /// Favorites
   internal static let favorites = L10n.tr("Localizable", "favorites", fallback: "Favorites")
+  /// Featured Banner
+  internal static let featuredBanner = L10n.tr("Localizable", "featuredBanner", fallback: "Featured Banner")
   /// Featurette
   internal static let featurette = L10n.tr("Localizable", "featurette", fallback: "Featurette")
   /// File

@@ -198,6 +198,10 @@ extension Defaults.Keys {
                 UserKey("libraryShowFavorites", default: true)
             }
 
+            static var showFeaturedBanner: Key<Bool> {
+                UserKey("libraryShowFeaturedBanner", default: true)
+            }
+
             static var rememberLayout: Key<Bool> {
                 UserKey("libraryRememberLayout", default: false)
             }

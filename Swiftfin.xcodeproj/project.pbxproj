@@ -1298,10 +1298,10 @@
 		};
 		E12CDBBD2FFB592A00828742 /* XCRemoteSwiftPackageReference "CollectionVGrid" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/LePips/CollectionVGrid";
+			repositoryURL = "https://github.com/dwgoldie/CollectionVGrid";
 			requirement = {
-				branch = main;
-				kind = branch;
+				revision = 80c6b4ee8a0bae3b2a1ce40f26c6ddff2204f7e7;
+				kind = revision;
 			};
 		};
 		E13CCE482E6C077D0070965F /* XCRemoteSwiftPackageReference "LNPopupUI" */ = {

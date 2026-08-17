@@ -8,6 +8,7 @@
 
 import CollectionVGrid
 import Defaults
+import JellyfinAPI
 import SwiftUI
 
 struct PagingLibraryView<Library: PagingLibrary>: View where Library.Element: LibraryElement {
@@ -16,6 +17,8 @@ struct PagingLibraryView<Library: PagingLibrary>: View where Library.Element: Li
 
     @Default(.Customization.Library.rememberLayout)
     private var rememberIndividualLibraryStyle
+    @Default(.Customization.Library.showFeaturedBanner)
+    private var showFeaturedBanner
     @Default(.Customization.Library.style)
     private var defaultLibraryStyle
 
@@ -28,6 +31,8 @@ struct PagingLibraryView<Library: PagingLibrary>: View where Library.Element: Li
     @State
     private var isSafeAreaBarApplied: Bool = false
 
+    @StateObject
+    private var featuredViewModel: FeaturedItemsViewModel
     @StateObject
     private var gridProxy = CollectionVGridProxy()
     @StateObject
@@ -65,8 +70,20 @@ struct PagingLibraryView<Library: PagingLibrary>: View where Library.Element: Li
     }
 
     init(library: Library) {
+        self._featuredViewModel = StateObject(wrappedValue: FeaturedItemsViewModel(parent: library.parent as? BaseItemDto))
         self._parentLibraryStyle = StoredValue(.User.libraryStyle(id: library.parent.pagingLibraryID))
         self._viewModel = StateObject(wrappedValue: PagingLibraryViewModel(library: library))
+    }
+
+    private var featuredHeaderProvider: (() -> any View)? {
+        guard showFeaturedBanner,
+              !viewModel.isSearchActive,
+              featuredViewModel.shouldDisplay
+        else { return nil }
+
+        let featuredViewModel = featuredViewModel
+
+        return { FeaturedLibraryHeader(viewModel: featuredViewModel) }
     }
 
     @ViewBuilder
@@ -91,6 +108,7 @@ struct PagingLibraryView<Library: PagingLibrary>: View where Library.Element: Li
             ) { element in
                 element.makeBody(libraryStyle: libraryStyle)
             }
+            .headerView(featuredHeaderProvider)
             .onReachedBottomEdge(offset: .offset(300)) {
                 if viewModel.isSearchActive {
                     viewModel.getNextSearchPage()
@@ -180,6 +198,7 @@ struct PagingLibraryView<Library: PagingLibrary>: View where Library.Element: Li
         }
         .onFirstAppear {
             viewModel.refresh()
+            featuredViewModel.refresh()
         }
         .refreshable {
             viewModel.refresh()
