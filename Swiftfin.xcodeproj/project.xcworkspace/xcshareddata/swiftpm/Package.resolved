@@ -31,10 +31,9 @@
     {
       "identity" : "collectionvgrid",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/LePips/CollectionVGrid",
+      "location" : "https://github.com/dwgoldie/CollectionVGrid",
       "state" : {
-        "branch" : "main",
-        "revision" : "b6f489c85fbd642295aef64e02d05476d30e10fa"
+        "revision" : "80c6b4ee8a0bae3b2a1ce40f26c6ddff2204f7e7"
       }
     },
     {
