@@ -29,6 +29,52 @@ struct JellyseerrJellyfinAuthBody: Encodable {
     let password: String
 }
 
+enum JellyseerrMediaType: String, Decodable {
+    case movie
+    case tv
+}
+
+struct JellyseerrMedia: Decodable, Identifiable, Hashable {
+    let id: Int
+    let mediaType: JellyseerrMediaType
+    let title: String?
+    let name: String?
+    let posterPath: String?
+    let overview: String?
+
+    var displayTitle: String {
+        title ?? name ?? ""
+    }
+
+    /// TMDB reuses numeric ids across movies and shows, so the type has to
+    /// be part of identity.
+    static func == (lhs: JellyseerrMedia, rhs: JellyseerrMedia) -> Bool {
+        lhs.id == rhs.id && lhs.mediaType == rhs.mediaType
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(mediaType)
+    }
+}
+
+struct JellyseerrDiscoverResult: Decodable {
+    let page: Int
+    let totalPages: Int
+    let results: [JellyseerrMedia]
+}
+
+enum JellyseerrImageURL {
+
+    private static let base = URL(string: "https://image.tmdb.org/t/p")!
+
+    static func poster(path: String?, width: Int = 500) -> URL? {
+        guard let path, !path.isEmpty else { return nil }
+        let cleaned = path.hasPrefix("/") ? String(path.dropFirst()) : path
+        return base.appendingPathComponent("w\(width)").appendingPathComponent(cleaned)
+    }
+}
+
 enum JellyseerrError: LocalizedError {
     case invalidURL
     case unauthorized

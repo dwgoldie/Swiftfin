@@ -56,6 +56,14 @@ final class JellyseerrClient {
         return try decode(JellyseerrUser.self, from: data)
     }
 
+    func fetchTrending(page: Int = 1) async throws -> JellyseerrDiscoverResult {
+        try await get(
+            "/api/v1/discover/trending",
+            queryItems: [URLQueryItem(name: "page", value: String(page))],
+            requiresAuth: true
+        )
+    }
+
     func currentUser() async throws -> JellyseerrUser {
         try await get("/api/v1/auth/me", requiresAuth: true)
     }
@@ -67,14 +75,25 @@ final class JellyseerrClient {
 
     // MARK: - Private
 
-    private func get<T: Decodable>(_ path: String, requiresAuth: Bool) async throws -> T {
-        let (data, _) = try await send(path: path, method: "GET", body: String?.none, requiresAuth: requiresAuth)
+    private func get<T: Decodable>(
+        _ path: String,
+        queryItems: [URLQueryItem] = [],
+        requiresAuth: Bool
+    ) async throws -> T {
+        let (data, _) = try await send(
+            path: path,
+            method: "GET",
+            queryItems: queryItems,
+            body: String?.none,
+            requiresAuth: requiresAuth
+        )
         return try decode(T.self, from: data)
     }
 
     private func send(
         path: String,
         method: String,
+        queryItems: [URLQueryItem] = [],
         body: (some Encodable)?,
         requiresAuth: Bool
     ) async throws -> (Data, HTTPURLResponse) {
@@ -82,6 +101,9 @@ final class JellyseerrClient {
             throw JellyseerrError.invalidURL
         }
         components.path = (components.path + path).replacingOccurrences(of: "//", with: "/")
+        if !queryItems.isEmpty {
+            components.queryItems = queryItems
+        }
         guard let url = components.url else {
             throw JellyseerrError.invalidURL
         }
