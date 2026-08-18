@@ -16,6 +16,9 @@ struct DefaultContentGroupProvider: ContentGroupProvider {
     @Injected(\.currentUserSession)
     var userSession: UserSession?
 
+    @Injected(\.jellyseerrService)
+    var jellyseerrService
+
     let displayTitle: String = L10n.home
     let id: String = "default-content-group-provider"
 
@@ -102,6 +105,10 @@ struct DefaultContentGroupProvider: ContentGroupProvider {
                     )
                 )
             )
+        }
+
+        if jellyseerrService.isConfigured {
+            JellyseerrDiscoverContentGroup()
         }
 
         PosterGroup(
