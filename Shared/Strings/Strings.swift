@@ -862,6 +862,36 @@ internal enum L10n {
   internal static let items = L10n.tr("Localizable", "items", fallback: "Items")
   /// Item view
   internal static let itemView = L10n.tr("Localizable", "itemView", fallback: "Item view")
+  /// Jellyseerr
+  internal static let jellyseerr = L10n.tr("Localizable", "jellyseerr", fallback: "Jellyseerr")
+  /// Connected as %@
+  internal static func jellyseerrConnectedAs(_ p1: Any) -> String {
+    return L10n.tr("Localizable", "jellyseerrConnectedAs", String(describing: p1), fallback: "Connected as %@")
+  }
+  /// Connecting…
+  internal static let jellyseerrConnecting = L10n.tr("Localizable", "jellyseerrConnecting", fallback: "Connecting…")
+  /// Disconnect
+  internal static let jellyseerrDisconnect = L10n.tr("Localizable", "jellyseerrDisconnect", fallback: "Disconnect")
+  /// Enter a valid server URL
+  internal static let jellyseerrInvalidURL = L10n.tr("Localizable", "jellyseerrInvalidURL", fallback: "Enter a valid server URL")
+  /// Jellyseerr isn't configured yet
+  internal static let jellyseerrNotConfigured = L10n.tr("Localizable", "jellyseerrNotConfigured", fallback: "Jellyseerr isn't configured yet")
+  /// Password
+  internal static let jellyseerrPassword = L10n.tr("Localizable", "jellyseerrPassword", fallback: "Password")
+  /// Server URL
+  internal static let jellyseerrServerURL = L10n.tr("Localizable", "jellyseerrServerURL", fallback: "Server URL")
+  /// Connect a Jellyseerr server to request movies and shows from within Swiftfin.
+  internal static let jellyseerrSettingsDescription = L10n.tr("Localizable", "jellyseerrSettingsDescription", fallback: "Connect a Jellyseerr server to request movies and shows from within Swiftfin.")
+  /// Test Connection
+  internal static let jellyseerrTestConnection = L10n.tr("Localizable", "jellyseerrTestConnection", fallback: "Test Connection")
+  /// Invalid username or password
+  internal static let jellyseerrUnauthorized = L10n.tr("Localizable", "jellyseerrUnauthorized", fallback: "Invalid username or password")
+  /// Unexpected response (%d)
+  internal static func jellyseerrUnexpectedResponse(_ p1: Int) -> String {
+    return L10n.tr("Localizable", "jellyseerrUnexpectedResponse", p1, fallback: "Unexpected response (%d)")
+  }
+  /// Username
+  internal static let jellyseerrUsername = L10n.tr("Localizable", "jellyseerrUsername", fallback: "Username")
   /// Join groups
   internal static let joinGroups = L10n.tr("Localizable", "joinGroups", fallback: "Join groups")
   /// Jump

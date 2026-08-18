@@ -123,6 +123,12 @@ extension NavigationRoute {
         }
     }
 
+    static var jellyseerrSettings: NavigationRoute {
+        NavigationRoute(id: "jellyseerrSettings") {
+            JellyseerrSettingsView()
+        }
+    }
+
     @MainActor
     static func serverConnections(viewModel: ServerConnectionViewModel) -> NavigationRoute {
         NavigationRoute(

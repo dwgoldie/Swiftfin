@@ -40,6 +40,7 @@ struct SettingsView: View {
             serverSection
             videoPlayerSection
             customizeSection
+            jellyseerrSection
             diagnosticsSection
         }
         #if os(iOS)
@@ -160,6 +161,18 @@ struct SettingsView: View {
             Text(L10n.customize)
         } footer: {
             Text(L10n.viewsMayRequireRestart)
+        }
+    }
+
+    // MARK: - Jellyseerr Section
+
+    private var jellyseerrSection: some View {
+        Section {
+            ChevronButton(L10n.jellyseerr) {
+                router.route(to: .jellyseerrSettings)
+            }
+        } footer: {
+            Text(L10n.jellyseerrSettingsDescription)
         }
     }
 
