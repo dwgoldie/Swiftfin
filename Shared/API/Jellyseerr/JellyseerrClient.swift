@@ -64,6 +64,33 @@ final class JellyseerrClient {
         )
     }
 
+    func search(query: String, page: Int = 1) async throws -> JellyseerrSearchResult {
+        try await get(
+            "/api/v1/search",
+            queryItems: [
+                URLQueryItem(name: "query", value: query),
+                URLQueryItem(name: "page", value: String(page)),
+            ],
+            requiresAuth: true
+        )
+    }
+
+    /// - Note: a 202 response means every requestable season was already
+    ///   requested, processing, or available -- Jellyseerr signals that
+    ///   failure inside the 2xx range instead of as an HTTP error.
+    func createRequest(mediaType: JellyseerrMediaType, tmdbID: Int) async throws {
+        let body = JellyseerrCreateRequestBody(mediaType: mediaType, mediaId: tmdbID)
+        let (_, response) = try await send(
+            path: "/api/v1/request",
+            method: "POST",
+            body: body,
+            requiresAuth: true
+        )
+        if response.statusCode == 202 {
+            throw JellyseerrError.noSeasonsAvailable
+        }
+    }
+
     func currentUser() async throws -> JellyseerrUser {
         try await get("/api/v1/auth/me", requiresAuth: true)
     }

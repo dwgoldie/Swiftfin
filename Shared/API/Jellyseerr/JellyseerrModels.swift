@@ -29,9 +29,37 @@ struct JellyseerrJellyfinAuthBody: Encodable {
     let password: String
 }
 
-enum JellyseerrMediaType: String, Decodable {
+enum JellyseerrMediaType: String, Codable {
     case movie
     case tv
+}
+
+/// Jellyseerr's own numeric media-status enum. Lenient decode: a future
+/// Jellyseerr adding a new state shouldn't abort decoding the whole
+/// search/discover response over one unrecognized entry.
+enum JellyseerrMediaStatus: Int, Decodable {
+    case unknown = 1
+    case pending = 2
+    case processing = 3
+    case partiallyAvailable = 4
+    case available = 5
+    case deleted = 7
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let raw = try container.decode(Int.self)
+        self = JellyseerrMediaStatus(rawValue: raw) ?? .unknown
+    }
+
+    /// Whether this status means "don't offer a request button" -- already
+    /// in the library, in the download pipeline, or awaiting approval.
+    var isRequestable: Bool {
+        self == .unknown || self == .deleted
+    }
+}
+
+struct JellyseerrMediaInfo: Decodable {
+    let status: JellyseerrMediaStatus?
 }
 
 struct JellyseerrMedia: Decodable, Identifiable, Hashable {
@@ -41,9 +69,14 @@ struct JellyseerrMedia: Decodable, Identifiable, Hashable {
     let name: String?
     let posterPath: String?
     let overview: String?
+    let mediaInfo: JellyseerrMediaInfo?
 
     var displayTitle: String {
         title ?? name ?? ""
+    }
+
+    var isRequestable: Bool {
+        mediaInfo?.status?.isRequestable ?? true
     }
 
     /// TMDB reuses numeric ids across movies and shows, so the type has to
@@ -64,6 +97,59 @@ struct JellyseerrDiscoverResult: Decodable {
     let results: [JellyseerrMedia]
 }
 
+/// `/api/v1/search` mixes in `person` and other TMDB result types alongside
+/// movies/shows; anything that isn't `.movie`/`.tv` is dropped rather than
+/// failing the whole decode, since a single unusable entry shouldn't cost
+/// the rest of the page.
+struct JellyseerrSearchResult: Decodable {
+    let results: [JellyseerrMedia]
+
+    private enum CodingKeys: String, CodingKey {
+        case results
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let entries = try container.decodeIfPresent([Entry].self, forKey: .results) ?? []
+        results = entries.compactMap(\.media)
+    }
+
+    private enum Entry: Decodable {
+        case media(JellyseerrMedia)
+        case other
+
+        private enum TypeKey: String, CodingKey {
+            case mediaType
+        }
+
+        var media: JellyseerrMedia? {
+            if case let .media(media) = self {
+                return media
+            }
+            return nil
+        }
+
+        init(from decoder: Decoder) throws {
+            let type = try? decoder.container(keyedBy: TypeKey.self)
+                .decodeIfPresent(String.self, forKey: .mediaType)
+            if type == "movie" || type == "tv" {
+                self = (try? JellyseerrMedia(from: decoder)).map(Entry.media) ?? .other
+            } else {
+                self = .other
+            }
+        }
+    }
+}
+
+struct JellyseerrCreateRequestBody: Encodable {
+    let mediaType: JellyseerrMediaType
+    let mediaId: Int
+}
+
+struct JellyseerrRequest: Decodable {
+    let id: Int?
+}
+
 enum JellyseerrImageURL {
 
     private static let base = URL(string: "https://image.tmdb.org/t/p")!
@@ -81,6 +167,10 @@ enum JellyseerrError: LocalizedError {
     case unexpectedResponse(statusCode: Int)
     case decoding(Error)
     case notConfigured
+    /// Jellyseerr's `POST /request` signals this failure inside the 2xx
+    /// range (202 + a message body) rather than as an HTTP error -- every
+    /// season requested was already requested, processing, or available.
+    case noSeasonsAvailable
 
     var errorDescription: String? {
         switch self {
@@ -94,6 +184,8 @@ enum JellyseerrError: LocalizedError {
             error.localizedDescription
         case .notConfigured:
             L10n.jellyseerrNotConfigured
+        case .noSeasonsAvailable:
+            L10n.jellyseerrNoSeasonsAvailable
         }
     }
 }

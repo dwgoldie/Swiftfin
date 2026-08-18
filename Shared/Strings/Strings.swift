@@ -872,12 +872,22 @@ internal enum L10n {
   internal static let jellyseerrConnecting = L10n.tr("Localizable", "jellyseerrConnecting", fallback: "Connecting…")
   /// Disconnect
   internal static let jellyseerrDisconnect = L10n.tr("Localizable", "jellyseerrDisconnect", fallback: "Disconnect")
+  /// In Library
+  internal static let jellyseerrInLibrary = L10n.tr("Localizable", "jellyseerrInLibrary", fallback: "In Library")
   /// Enter a valid server URL
   internal static let jellyseerrInvalidURL = L10n.tr("Localizable", "jellyseerrInvalidURL", fallback: "Enter a valid server URL")
+  /// All seasons already requested or available
+  internal static let jellyseerrNoSeasonsAvailable = L10n.tr("Localizable", "jellyseerrNoSeasonsAvailable", fallback: "All seasons already requested or available")
   /// Jellyseerr isn't configured yet
   internal static let jellyseerrNotConfigured = L10n.tr("Localizable", "jellyseerrNotConfigured", fallback: "Jellyseerr isn't configured yet")
   /// Password
   internal static let jellyseerrPassword = L10n.tr("Localizable", "jellyseerrPassword", fallback: "Password")
+  /// Request
+  internal static let jellyseerrRequest = L10n.tr("Localizable", "jellyseerrRequest", fallback: "Request")
+  /// Requested
+  internal static let jellyseerrRequested = L10n.tr("Localizable", "jellyseerrRequested", fallback: "Requested")
+  /// Request failed
+  internal static let jellyseerrRequestFailed = L10n.tr("Localizable", "jellyseerrRequestFailed", fallback: "Request failed")
   /// Server URL
   internal static let jellyseerrServerURL = L10n.tr("Localizable", "jellyseerrServerURL", fallback: "Server URL")
   /// Connect a Jellyseerr server to request movies and shows from within Swiftfin.

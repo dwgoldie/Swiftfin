@@ -6,6 +6,7 @@
 // Copyright (c) 2026 Jellyfin & Jellyfin Contributors
 //
 
+import FactoryKit
 import Foundation
 import JellyfinAPI
 
@@ -24,6 +25,9 @@ struct SearchContentGroupProvider: ContentGroupProvider {
     let displayTitle: String = L10n.search
     let filterViewModel: FilterViewModel
     var environment: Environment
+
+    @Injected(\.jellyseerrService)
+    private var jellyseerrService
 
     init() {
         let filterViewModel: FilterViewModel = .init()
@@ -54,5 +58,9 @@ struct SearchContentGroupProvider: ContentGroupProvider {
                 environment: .init(query: environment.filters.query)
             )
         )
+
+        if jellyseerrService.isConfigured, let query = environment.filters.query, !query.isEmpty {
+            JellyseerrSearchContentGroup(query: query)
+        }
     }
 }
